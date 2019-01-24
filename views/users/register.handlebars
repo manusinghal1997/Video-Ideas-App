@@ -1,0 +1,22 @@
+<h1>Registeration Form</h1>
+
+<form action="/users/register" method="post">
+<div class="form-group">
+    <label for="name">Name:</label>
+    <input type="text" name="name" class="form-control" value="{{name}}" id="name">
+  </div>
+
+  <div class="form-group">
+    <label for="email">Email address:</label>
+    <input type="email" name="email" class="form-control" value="{{email}}" id="email">
+  </div>
+  <div class="form-group">
+    <label for="pwd">Password:</label>
+    <input type="password" name="password" class="form-control" value="{{password}}"id="pwd">
+  </div>
+  <div class="form-group">
+    <label for="pwd">RetypePassword:</label>
+    <input type="password" value="{{retypepassword}}" name="retypepassword" class="form-control" id="pwd">
+  </div>
+  <button type="submit" class="btn btn-default">Submit</button>
+</form>

@@ -16,6 +16,9 @@ app.set('view engine','handlebars');
 	next();  
 });
 */
+// Load routes
+const ideas = require('./routes/ideas');
+const users = require('./routes/users');
 
 // map global promise - get rid of warning 
 mongoose.Promise = global.Promise; 
@@ -23,8 +26,6 @@ mongoose.Promise = global.Promise;
 mongoose.connect('mongodb://localhost/youtube',{})
 	.then(() => console.log('Mongodb Connected...'))
 	.catch(err => console.log(err));
-
-
 // Load Idea Model
 require('./models/Idea');
 const Idea = mongoose.model('ideas');
@@ -70,92 +71,10 @@ app.use(function(req,res,next){
 	});
 });
 
-app.get('/ideas/edit/:id', (req,res) =>{
-		Idea.findOne({
-			_id: req.params.id
-		})
-		.then(idea =>{
-			res.render('ideas/edit',{
-				idea : idea
-			});
-		});
-	
-});
 
-// edit form process
-// to use put method we have to use method-override
-app.put('/ideas/:id',(req,res) =>{
-	Idea.findOne({
-		_id: req.params.id
-	})
-	.then(idea =>{
-		idea.title = req.body.title;
-		idea.details = req.body.details;
-		console.log(idea);
-		idea.save()
-		.then(idea =>{
-				req.flash('success_msg','Video Idea Updated');
-	
-			res.redirect('/ideas')
-		})	
-	});
-});
+// user routes
+// anything that goes to /ideas pretends to that ideas file
+app.use('/ideas',ideas);
+app.use('/users',users);
 
-app.delete('/ideas/:id',(req,res) =>{
-	Idea.remove({_id: req.params.id})
-	.then(() =>{
-		req.flash('success_msg','Video Idea Removed');
-		res.redirect('/ideas');
-	});
-});
-app.get('/ideas', (req,res) => {
-	Idea.find({})
-	.sort({date:'desc'})
-	.then(ideas =>{
-	res.render('ideas/index',{
-		ideas: ideas
-	});
-
-	})
-});	
-app.get('/ideas/add',(req,res) =>{
-	console.log("data=",req.body);
-
-		res.render('add');
-});
-
-app.post('/ideas/add',(req,res) =>{
-	console.log(req.body);
-
-let errors =[];
-
-		if(!req.body.title)
-
-			errors.push({text: 'Please add a title'});
-		if(!req.body.details)
-			errors.push({text: 'Please enter Details'});
-		if(errors.length>0){
-			res.render('add',{
-				errors : errors,
-				title :  req.body.title,
-				details : req.body.details 
-			});
-		}
-		else
-		{
-			const newUser = {
-				title: req.body.title,
-				details: req.body.details
-			}
-			new Idea(newUser)
-			.save()
-			.then(idea =>{
-		req.flash('success_msg','Video Idea Added');
-	
-				res.redirect('/ideas');
-			})
-		}
-
-	});
-	
 	app.listen("3000");
