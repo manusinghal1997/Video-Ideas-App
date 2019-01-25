@@ -16,6 +16,7 @@ const session = require('express-session');
 app.engine('handlebars', exphbs({defaultLayout:'main'}));
 app.set('view engine','handlebars');
 
+const db = require('./config/database');
 /*app.use(function(req,res,next){
 	//console.log(Date.now());
 	req.name= "Manu singhal";
@@ -30,7 +31,11 @@ const users = require('./routes/users');
 mongoose.Promise = global.Promise; 
 
 // connect to mongoose
-mongoose.connect('mongodb://localhost/youtube',{})
+// to connect with mlab add username and password
+// mongodb://<dbuser>:<dbpassword>@ds211865.mlab.com:11865/video-idea-app
+mongoose.connect(db.mongoURI,{
+		useMongoClient: true
+})
 	.then(() => console.log('!Mongodb Connected...'))
 	.catch(err => console.log(err));
 
@@ -92,4 +97,10 @@ app.use('/ideas',ideas);
 // anything that goes to /users pretends to that users file
 app.use('/users',users);
 
-	app.listen("3000");
+// Defining the port to be used
+const port = process.env.PORT || 3000;
+
+
+	app.listen(port,()=>{
+		console.log('Server started on port ${port}');
+	});
