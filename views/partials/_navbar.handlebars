@@ -9,12 +9,15 @@
       <li><a href="/about">About</a></li>
       <li><a href="#"></a></li>
     </ul>
-    <ul class="nav navbar-nav navbar-right">
+   <ul class="nav navbar-nav navbar-right">
+      
+   {{#if user}}
       <li><a href="/ideas/add"><span class="glyphicon glyphicon-user"></span> Add Ideas</a></li>
          <li><a href="/ideas"><span class="glyphicon glyphicon-user"></span> Video Ideas</a></li>
-   
+   {{else}}
       <li><a href="/users/login"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
       <li><a href="/users/register"><span class="glyphicon glyphicon-log-in"></span> Register</a></li>
+      {{/if}}
     </ul>
   </div>
 </nav>

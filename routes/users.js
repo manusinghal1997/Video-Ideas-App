@@ -2,7 +2,7 @@ const express= require('express');
 const router = express.Router();
 require('../models/Idea');
 const bcrypt = require('bcryptjs');
-const password = require('passport');
+const passport = require('passport');
 
 const mongoose = require('mongoose');
 mongoose.connect('mongodb://localhost/youtube',{})
@@ -17,9 +17,22 @@ const User = mongoose.model('users');
 // app to router.
 const Idea = mongoose.model('ideas');
 
+//Passport config
+require('../config/passport')(passport);
+
+    router.post('/login',(req,res,next) =>{
+		console.log("inside login");
+		passport.authenticate('local',{
+		successRedirect:'/ideas',
+		failureRedirect: '/users/login',
+		failureFlash : true
+	})(req,res,next);
+	// Not go to config file to check the working of local stragegy
+});
 	router.get('/login',(req,res) =>{
 		res.render("users/login");
 	});
+		
 	router.get('/register',(req,res) =>{
 		res.render("users/register");
 	});
